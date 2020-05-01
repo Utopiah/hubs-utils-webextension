@@ -1,0 +1,22 @@
+{
+
+	"manifest_version": 2,
+	"name": "hubs-utils",
+	"version": "0.3",
+
+	"description": "Adds utils to control Hubs assets.",
+
+	"icons": {
+		"48": "icons/border-48.png"
+	},
+
+	"content_scripts": [
+		{
+			"matches": ["*://hubs.mozilla.com/*"],
+			"js": ["utils.js"]
+		}
+	],
+
+	"permissions": ["clipboardRead", "clipboardWrite"]
+
+}
