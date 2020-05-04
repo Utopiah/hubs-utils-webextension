@@ -8,7 +8,23 @@
 // and https://gist.github.com/Utopiah overall
 
 var actualCode = `
-console.log('Mozilla Hubs Utils loaded')
+console.log('Mozilla Hubs Utils loaded, available directly or via "hu"')
+
+var hu = {
+	loadAssetsFromURLs,
+	getAvatarFromName,
+	getFirstElementFromHash,
+	objects3DFromPartialName
+}
+
+function loadAssetsFromURLs(URLs){
+  for (var url of URLs){  
+    var el = document.createElement("a-entity")
+    AFRAME.scenes[0].appendChild(el)
+    el.setAttribute("media-loader", { src: url, fitToBox: true, resolve: true })
+    el.setAttribute("networked", { template: "#interactable-media" } )
+  }
+}
 
 function getAvatarFromName(name){
   for (a of document.querySelectorAll("[networked-avatar]") ){
@@ -28,23 +44,17 @@ function getFirstElementFromHash(hash){
 	return matches[0]
 }
 
-function attachObjAvatars(){
-  for (var a in staffNames){
- 		attachObjToAvatar( getFirstElementFromHash(rings[a]), getAvatarFromName(staffNames[a]) )
-	}
+function objects3DFromPartialName(name){
+  var matches = []
+  AFRAME.scenes[0].object3D.traverse(o=>{
+    var match = o.name.match(name)
+    if (match && match.length && o.type == "Object3D"){
+      matches.push(o)
+    }
+  })
+  return matches
 }
 
-function attachObjToAvatar(obj, avatar){
-  NAF.utils.getNetworkedEntity(obj).then(networkedEl => {
-    const mine = NAF.utils.isMine(networkedEl)
-    if (!mine) var owned = NAF.utils.takeOwnership(networkedEl)
-    networkedEl.object3D.position.copy( avatar.object3D.position )
-    networkedEl.object3D.position.y += 1.8    
-    networkedEl.object3D.rotation.y += 0.2
-    networkedEl.object3D.rotation.x = 0
-    networkedEl.object3D.rotation.z = 0
-  })
-}
 `
 
 // ------------------------------ end of utils ------------------------------
