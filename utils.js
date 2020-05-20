@@ -9,12 +9,27 @@
 
 var actualCode = `
 console.log('Mozilla Hubs Utils loaded, available directly or via "hu"')
+console.log('Latest version https://gist.github.com/Utopiah/1cfc123239fa2994569fc7c5c60b2928')
 
-var hu = {
-	loadAssetsFromURLs,
-	getAvatarFromName,
-	getFirstElementFromHash,
-	objects3DFromPartialName
+const hubs_utils = {
+  removeEntitiesFromMediaList,
+  setPinEntities,
+  loadAssetsFromURLs,
+  getAvatarFromName,
+  getFirstElementFromHash,
+  objects3DFromPartialName,
+  getFirstElementFromPartialURL,
+  getAvatarFromName,
+}
+
+function removeEntitiesFromMediaList(entities){
+  for (var el of entities)
+     el.removeComponent("listed-media")
+}
+
+function setPinEntities(entities, pinned){
+  for (var el of entities)
+     el.setAttribute("pinnable", {pinned: pinned} )
 }
 
 function loadAssetsFromURLs(URLs){
@@ -55,6 +70,22 @@ function objects3DFromPartialName(name){
   return matches
 }
 
+function getFirstElementFromPartialURL(partialURL){
+  var element = null
+  var medias = document.querySelectorAll("[media-loader]")
+  for (var m of medias){
+    var match = m.components["media-loader"].attrValue.src.match(partialURL)
+    if (match && match.length > 0) return m
+  }
+}
+
+function getAvatarFromName(name){
+  for (a of document.querySelectorAll("[networked-avatar]") ){
+    var el = document.querySelector("#"+a.id)
+    if ( name.trim() == el.components["player-info"].displayName.trim() ) return el
+  }
+  return null
+}
 `
 
 // ------------------------------ end of utils ------------------------------
